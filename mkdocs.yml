@@ -1,0 +1,6 @@
+site_name: rePLS
+nav:
+- Get started: introduction.md 
+- Reference: reference.md
+theme: readthedocs
+
