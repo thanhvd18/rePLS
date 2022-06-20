@@ -13,7 +13,7 @@ pip install rePLS
 <!-- The new ggseg-package version has introduced a new way of plotting the brain atlases, through a custom geom_brain (variant of geom_sf). This has introduced a lot of new functionality into the package, in addition to some new custom methods and objects. -->
 
 
-```
+```python
 from rePLS import rePLS, rePCR, reMLR
 
 import numpy as np
@@ -45,7 +45,7 @@ Y_pred = reg.predict(X,Z)
 
 ## Example: Least squares and residual least squares 
 
-```
+```python
 import numpy as np
 from rePLS import rePLS,reMLR
 import matplotlib.pyplot as plt
@@ -92,7 +92,7 @@ plt.legend(['True','Observe','OLS','reMLR'])
 
 **Compare correlation coefficient**
 
-```
+```python
 import pandas as pd
 import seaborn as sns
 import scipy.stats as stats
@@ -105,7 +105,7 @@ plt.legend([f'r={r:.2f}, P={p:1.1e}'])
 
 ![LR](images/LR.png)
 
-```
+```python
 r, p = stats.pearsonr(y,y_pred2)
 sns.regplot(x="y_reMLR", y="y", data=df);
 plt.legend([f'r={r:.2f}, P={p:1.1e}'])

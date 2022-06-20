@@ -44,14 +44,12 @@
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Get started</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#install">Install</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#example-least-squares-and-residual-least-squares">Example: Least squares and residual least squares</a>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#example-of-repls-for-multivariate-input-brain-areas-multivariate-output-disease-scores">Example of rePLS for multivariate input (brain areas), multivariate output (disease scores)</a>
+    <li class="toctree-l2"><a class="reference internal" href="#example-least-squares-and-residual-least-squares">Example: Least squares and residual least squares</a>
     </li>
-        </ul>
+    <li class="toctree-l2"><a class="reference internal" href="#example-of-repls-for-multivariate-input-brain-areas-multivariate-output-disease-scores">Example of rePLS for multivariate input (brain areas), multivariate output (disease scores)</a>
     </li>
     </ul>
                 </li>
@@ -87,10 +85,10 @@
 <h2 id="install">Install</h2>
 <pre><code>pip install rePLS
 </code></pre>
-<h3 id="usage">Usage</h3>
+<h2 id="usage">Usage</h2>
 <!-- The new ggseg-package version has introduced a new way of plotting the brain atlases, through a custom geom_brain (variant of geom_sf). This has introduced a lot of new functionality into the package, in addition to some new custom methods and objects. -->
 
-<pre><code>from rePLS import rePLS, rePCR, reMLR
+<pre><code class="language-python">from rePLS import rePLS, rePCR, reMLR
 
 import numpy as np
 
@@ -118,8 +116,8 @@ reg.fit(X,Y)
 
 Y_pred = reg.predict(X,Z)
 </code></pre>
-<h3 id="example-least-squares-and-residual-least-squares">Example: Least squares and residual least squares</h3>
-<pre><code>import numpy as np
+<h2 id="example-least-squares-and-residual-least-squares">Example: Least squares and residual least squares</h2>
+<pre><code class="language-python">import numpy as np
 from rePLS import rePLS,reMLR
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
@@ -160,9 +158,9 @@ y_pred2 = reg.predict(x,confounders)
 plt.plot(x,y_plot_pred2,'k')
 plt.legend(['True','Observe','OLS','reMLR'])
 </code></pre>
-<p><img alt="" src="../images/xy.png" /></p>
+<p><img alt="xy" src="../images/xy.png" /></p>
 <p><strong>Compare correlation coefficient</strong></p>
-<pre><code>import pandas as pd
+<pre><code class="language-python">import pandas as pd
 import seaborn as sns
 import scipy.stats as stats
 
@@ -171,13 +169,13 @@ df = pd.DataFrame({'y':y, 'y_LR':y_pred, 'y_reMLR':y_pred2})
 sns.regplot(x=&quot;y_LR&quot;, y=&quot;y&quot;, data=df);
 plt.legend([f'r={r:.2f}, P={p:1.1e}'])
 </code></pre>
-<p><img alt="" src="../images/LR.png" /></p>
-<pre><code>r, p = stats.pearsonr(y,y_pred2)
+<p><img alt="LR" src="../images/LR.png" /></p>
+<pre><code class="language-python">r, p = stats.pearsonr(y,y_pred2)
 sns.regplot(x=&quot;y_reMLR&quot;, y=&quot;y&quot;, data=df);
 plt.legend([f'r={r:.2f}, P={p:1.1e}'])
 </code></pre>
-<p><img alt="" src="../images/reLR.png" /></p>
-<h3 id="example-of-repls-for-multivariate-input-brain-areas-multivariate-output-disease-scores">Example of rePLS for multivariate input (brain areas), multivariate output (disease scores)</h3>
+<p><img alt="reLR" src="../images/reLR.png" /></p>
+<h2 id="example-of-repls-for-multivariate-input-brain-areas-multivariate-output-disease-scores">Example of rePLS for multivariate input (brain areas), multivariate output (disease scores)</h2>
 <p><a href="https://share.streamlit.io/thanhvd18/re-pls-visualization/main/main.py">Simulation</a></p>
               
             </div>
