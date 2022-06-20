@@ -13,7 +13,7 @@ pip install rePLS
 <!-- The new ggseg-package version has introduced a new way of plotting the brain atlases, through a custom geom_brain (variant of geom_sf). This has introduced a lot of new functionality into the package, in addition to some new custom methods and objects. -->
 
 
-```(python)
+```
 from rePLS import rePLS, rePCR, reMLR
 
 import numpy as np
@@ -42,12 +42,6 @@ reg.fit(X,Y)
 
 Y_pred = reg.predict(X,Z)
 ```
-
-<!-- 
-### Simulation data
-
-https://share.streamlit.io/thanhvd18/re-pls-visualization/main/main.py -->
-
 
 ### Example: Least squares and residual least squares 
 
@@ -93,6 +87,7 @@ y_pred2 = reg.predict(x,confounders)
 plt.plot(x,y_plot_pred2,'k')
 plt.legend(['True','Observe','OLS','reMLR'])
 ```
+
 ![](images/xy.png)
 
 **Compare correlation coefficient**
@@ -107,14 +102,16 @@ df = pd.DataFrame({'y':y, 'y_LR':y_pred, 'y_reMLR':y_pred2})
 sns.regplot(x="y_LR", y="y", data=df);
 plt.legend([f'r={r:.2f}, P={p:1.1e}'])
 ```
+
 ![](images/LR.png)
+
 ```
 r, p = stats.pearsonr(y,y_pred2)
 sns.regplot(x="y_reMLR", y="y", data=df);
 plt.legend([f'r={r:.2f}, P={p:1.1e}'])
 ```
-![](images/reLR.png)
 
+![](images/reLR.png)
 
 ### Example of rePLS for multivariate input (brain areas), multivariate output (disease scores)
 [Simulation](https://share.streamlit.io/thanhvd18/re-pls-visualization/main/main.py)
