@@ -1,7 +1,20 @@
-# 1
+## rePLS
+Residual Partial Least Squares 
+
+Parameters:
+    - Z: confounders matrix
+    - n_components: Number of components 
 
 
+## rePCR
+Residual Principle Component Regession 
 
-## 2
+Parameters:
+    - Z: confounders matrix
+    - n_components: Number of components 
 
-## 3
+## reMLR
+Residual Multiple Linear Regression
+
+Parameters:
+    - Z: confounders matrix
