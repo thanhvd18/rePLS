@@ -1,0 +1,13 @@
+rePLS
+seaborn
+matplotlib
+pandas
+tqdm
+icecream
+numpy
+scipy
+scikit-learn
+cairosvg
+nibabel
+mayavi
+#PySurfer
