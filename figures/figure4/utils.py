@@ -18,11 +18,10 @@ from sklearn.utils import resample
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
-sys.path.append(os.path.join(os.getcwd(), '..', 'dev'))
-sys.path.append((os.path.join(os.getcwd(), 'figure1')))
-import figure1 as fig1
-import figure3 as fig3
-from figure3.utils import cal_correlation_MSE_regression
+
+import figures.figure1 as fig1
+import figures.figure3 as fig3
+from figures.figure3.utils import cal_correlation_MSE_regression
 
 def stratified_train_test_df_split(df, test_size,random_state):
     df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
@@ -115,14 +114,11 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_compone
     confounders = Z.columns.values
     n_outcomes = Y.shape[1]
 
-    stat_df = pd.DataFrame(columns=["fold", "r", "MSE", "p_value"])
-    predict_result_df = pd.DataFrame(columns=["outcome" + str(i) for i in range(
-        n_outcomes)] + ["outcome" + str(i) + "_pred" for i in range(n_outcomes)] + ["DX_encode"])
-    df['DX_encode'] = df['DX'].map({'CN': 0, 'MCI': 1, 'AD': 2})
 
+    df['DX_encode'] = df['DX'].map({'CN': 0, 'MCI': 1, 'AD': 2})
     Ps = []
-    Qs = []
-    alphas = []
+    Y_test_all_fold = []
+    Y_pred_all_fold = []
     for fold, (train_index, test_index) in enumerate(cv.get_splits(selected_subjects,labels)):
         print(f"Processing fold {fold}")
         train_subjects = np.array(selected_subjects)[train_index]
@@ -137,12 +133,10 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_compone
 
         X_test = np.vstack(df_test['Schaefer_200_7'].apply(eval))
         Y_test = np.array(df_test[outcomes])
-        Y_test_ = np.copy(Y_test)
         Z_test = np.array(df_test[confounders], dtype=float)
 
         X_train, X_test = X_train[:, :], X_test[:, :]
 
-        # normalize X, Y scaler
         X_scaler = StandardScaler()
         X_train = X_scaler.fit_transform(X_train)
         X_test = X_scaler.transform(X_test)
@@ -151,22 +145,23 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_compone
         # Y_train = Y_scaler.fit_transform(Y_train)
         # Y_test = Y_scaler.transform(Y_test)
 
-
         model = rePLS(n_components=n_components, Z=Z_train)
         model.fit(X_train, Y_train)
         y_pred = model.predict(X_test, Z=Z_test)
 
-        P = model.P
-        Q = model.Q
-        alpha = np.linalg.pinv(P) @ model.residual_model.coef_.T @ np.linalg.pinv(Q.T)
+        Y_test_all_fold.append(Y_test)
+        Y_pred_all_fold.append(y_pred)
 
-        Ps.append(P)
-        Qs.append(Q)
-        alphas.append(alpha)
+        Ps.append(model.P)
+
+    scores = {}
+    r, MSE, p_value = cal_correlation_MSE_regression(Y_test, y_pred)
+    scores["r"] = r
+    scores["MSE"] = MSE
+    scores["p_value"] = p_value
+
     mean_P = np.mean(Ps, axis=0)
-    mean_alpha = np.mean(alphas, axis=0)
-    mean_Q = np.mean(Qs, axis=0)
-    return mean_P, mean_alpha, mean_Q
+    return mean_P, scores
 
 
 def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_components: int,random_state: int,n_splits: int)-> pd.DataFrame:
@@ -215,7 +210,6 @@ def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: s
 
             X_train, X_test = X_train[:, :], X_test[:, :]
 
-            # normalize X, Y scaler
             X_scaler = StandardScaler()
             X_train = X_scaler.fit_transform(X_train)
             X_test = X_scaler.transform(X_test)
@@ -244,7 +238,6 @@ def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: s
                     model.fit(X_train, Y_train)
                     y_pred = model.predict(X_test, Z=Z_test)
 
-
                 elif method == "PLS":
                     model = PLSRegression(n_components=n_components)
                     model.fit(X_train, Y_train)
@@ -254,9 +247,7 @@ def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: s
                     model.fit(X_train, Y_train)
                     y_pred = model.predict(X_test, Z=Z_test)
 
-
                 else:
-                    # raise
                     print("Method not supported")
                     raise ValueError("Method not supported")
 
@@ -274,7 +265,6 @@ def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: s
         result_df.loc[len(result_df)] = [perc, 'PCR', np.mean(r_in_kfold['PCR']), np.mean(MSE_in_kfold['PCR']), np.mean(pvalue_in_kfold['PCR']), np.var(MSE_in_kfold['PCR']), np.var(r_in_kfold['PCR'])]
         result_df.loc[len(result_df)] = [perc, 'LR', np.mean(r_in_kfold['LR']), np.mean(MSE_in_kfold['LR']), np.mean(pvalue_in_kfold['LR']), np.var(MSE_in_kfold['LR']), np.var(r_in_kfold['LR'])]
 
-    #save to out_dir
     os.makedirs(out_dir, exist_ok=True)
     result_df.to_csv(os.path.join(out_dir, 'sample_size_change_prediction.csv'))
     print("Save to ", os.path.join(out_dir, 'sample_size_change_prediction.csv'))

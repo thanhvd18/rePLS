@@ -181,14 +181,10 @@ def plot_fig_4a_supplementary():
     for test_size in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]:
 
         if test_size == 0:
-        # sample_train_df, sample_test_df, N_subject_train = fig4.utils.stratified_train_test_df_split(df, test_size,random_state)
-        # print(f"N_subject_train = {N_subject_train}, perform LOOCV")
-        # print(f"training size = { len(df['SubjectID'].unique())}")
             n_splits = len(df['SubjectID'].unique())
             cv = CrossValidator(n_splits=n_splits, n_repeats=n_repeats,
                                 stratified=False, random_state=random_state)
-            mean_P, mean_alpha = fig4.utils.k_fold_prediction(df, cv, out_dir,n_components,random_state,n_splits=n_splits)
-            #save mean_P to mat
+            mean_P, scores = fig4.utils.k_fold_prediction(df, cv, out_dir,n_components,random_state,n_splits=n_splits)
             os.makedirs(out_dir, exist_ok=True)
             path = os.path.join(
                 out_dir, f"mean_P_test_size{test_size}.mat"
@@ -200,7 +196,7 @@ def plot_fig_4a_supplementary():
             n_splits = len(sample_train_df['SubjectID'].unique())
             cv = CrossValidator(n_splits=n_splits, n_repeats=n_repeats,
                                 stratified=False, random_state=random_state)
-            mean_P, mean_alpha = fig4.utils.k_fold_prediction(sample_train_df, cv, out_dir, n_components, random_state,
+            mean_P, scores = fig4.utils.k_fold_prediction(sample_train_df, cv, out_dir, n_components, random_state,
                                                               n_splits=n_splits)
             # save mean_P to mat
         os.makedirs(out_dir, exist_ok=True)
@@ -208,7 +204,7 @@ def plot_fig_4a_supplementary():
             out_dir, f"mean_P_test_size{test_size}.mat"
         )
 
-        scipy.io.savemat(path, {'P': mean_P, 'alpha': mean_alpha})
+        scipy.io.savemat(path, {'P': mean_P})
     # return mean_P,mean_alpha
 
 def figure_4b():
@@ -361,6 +357,6 @@ if __name__ == '__main__':
     # result_df = plot_fig_4e()
     # result_df = plot_fig_4f()
     # print(result_df)
-    plot_fig_4d()
-    # plot_fig_4a_supplementary()
+    # plot_fig_4d()
+    plot_fig_4a_supplementary()
 
