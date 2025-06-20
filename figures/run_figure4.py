@@ -109,7 +109,6 @@ def plot_fig_4e():
     data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
-    X, Y, Z = fig1.utils.get_input_output_confounder(df)
     n_components = 5
     n_splits = 10
     n_repeats = 1
@@ -124,7 +123,6 @@ def plot_fig_4e():
     os.makedirs("figure4/4e", exist_ok=True)
     plt.savefig('figure4/4e/figure4e.svg')
     plt.show()
-    #save data for plotting using other tools
     result_df.to_csv('figure4/4e/figure4e.csv', index=False)
     return result_df
 
@@ -175,9 +173,7 @@ def plot_fig_4a_supplementary():
     n_repeats = 1
     random_state = 1
     out_dir = './figure4/results/supplementary'
-
-    # test_size = 0.9
-    # for test_size in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]:
+    results = []
     for test_size in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]:
 
         if test_size == 0:
@@ -198,14 +194,22 @@ def plot_fig_4a_supplementary():
                                 stratified=False, random_state=random_state)
             mean_P, scores = fig4.utils.k_fold_prediction(sample_train_df, cv, out_dir, n_components, random_state,
                                                               n_splits=n_splits)
-            # save mean_P to mat
         os.makedirs(out_dir, exist_ok=True)
         path = os.path.join(
             out_dir, f"mean_P_test_size{test_size}.mat"
         )
 
         scipy.io.savemat(path, {'P': mean_P})
-    # return mean_P,mean_alpha
+        if isinstance(scores, dict):
+            scores_row = scores.copy()
+        else:
+            scores_row = scores[0] if isinstance(scores, list) and len(scores) > 0 else {}
+        scores_row['test_size'] = test_size
+        results.append(scores_row)
+
+    scores_df = pd.DataFrame(results)
+    scores_csv_path = os.path.join(out_dir, "scores_by_test_size.csv")
+    scores_df.to_csv(scores_csv_path, index=False)
 
 def figure_4b():
     # Load data from CSV

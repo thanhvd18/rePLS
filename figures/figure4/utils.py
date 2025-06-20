@@ -26,10 +26,6 @@ from figures.figure3.utils import cal_correlation_MSE_regression
 def stratified_train_test_df_split(df, test_size,random_state):
     df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
-    outcomes = Y.columns.values
-    confounders = Z.columns.values
-    n_outcomes = Y.shape[1]
-
     subjects_train, subjects_test, labels_train, labels_test = train_test_split(selected_subjects,labels,test_size=test_size, random_state=random_state )
     train_df = df[df['SubjectID'].isin(subjects_train)]
     test_df = df[df['SubjectID'].isin(subjects_test)]
@@ -112,8 +108,6 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_compone
     selected_subjects = df['SubjectID'].unique()
     outcomes = Y.columns.values
     confounders = Z.columns.values
-    n_outcomes = Y.shape[1]
-
 
     df['DX_encode'] = df['DX'].map({'CN': 0, 'MCI': 1, 'AD': 2})
     Ps = []
@@ -155,7 +149,9 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_compone
         Ps.append(model.P)
 
     scores = {}
-    r, MSE, p_value = cal_correlation_MSE_regression(Y_test, y_pred)
+    Y_test_all = np.vstack(Y_test_all_fold)
+    Y_pred_all = np.vstack(Y_pred_all_fold)
+    r, MSE, p_value = cal_correlation_MSE_regression(Y_test_all, Y_pred_all)
     scores["r"] = r
     scores["MSE"] = MSE
     scores["p_value"] = p_value
@@ -255,7 +251,6 @@ def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: s
                 r_in_kfold[method].append(r)
                 MSE_in_kfold[method].append(MSE)
                 pvalue_in_kfold[method].append(p_value)
-
 
 
         result_df.loc[len(result_df)] = [perc, 'rePLS', np.mean(r_in_kfold['rePLS']), np.mean(MSE_in_kfold['rePLS']), np.mean(pvalue_in_kfold['rePLS']), np.var(MSE_in_kfold['rePLS']), np.var(r_in_kfold['rePLS'])]
