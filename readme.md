@@ -25,17 +25,3 @@ bash exps/run_all.sh
 ```bash
 bash exps/run_figure1.sh
 ```
-
-
-## Citing
-
-If you use this code in your research, please cite the paper:
-
-```
-@article{chen2024residual,
-  title={Residual Partial Least Squares Learning: Brain Cortical Thickness Simultaneously Predicts Eight Non-pairwise-correlated Behavioural and Disease Outcomes in Alzheimer’s Disease},
-  author={Ch{\'e}n, Oliver Y and V{\~u}, Duy Thanh and Diaz, Christelle Schneuwly and Bodelet, Julien S and Phan, Huy and Allali, Gilles and Nguyen, Viet-Dung and Cao, Hengyi and He, Xingru and M{\"u}ller, Yannick and others},
-  journal={bioRxiv},
-  year={2024}
-}
-```
