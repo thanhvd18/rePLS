@@ -3,7 +3,7 @@ import sys
 
 from sklearn.cluster import mean_shift
 
-sys.path.append((os.path.join(os.getcwd(), 'figure1')))
+sys.path.append((os.path.join(os.path.dirname(__file__), '..', 'figure1')))
 import figure1 as fig1
 import figure3 as fig3
 from figure3.utils import cal_correlation_MSE_regression
@@ -25,7 +25,7 @@ from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline,make_pipeline
 
 from typing import Tuple, List, Dict, Any, Optional
-sys.path.append(os.path.join(os.getcwd(), '..', 'dev'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'dev'))
 
 from cross_validator import CrossValidator
 from icecream import ic

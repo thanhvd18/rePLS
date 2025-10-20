@@ -19,7 +19,7 @@ from cross_validator import CrossValidator
 
 
 def plot_fig_6b(show_plot=False):
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
 
     df = fig1.utils.preprocess_df(data_path)
 
@@ -92,7 +92,7 @@ def plot_fig_6b(show_plot=False):
     return
 
 def plot_fig_6c(show_plot=False):
-    data_path = os.path.join(os.getcwd(), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
     df = fig6.utils.load_OASIS(data_path)
     X, Y, Z = fig6.utils.get_input_output_confounder_OASIS(df)
     n_components = 5
@@ -155,7 +155,7 @@ def plot_fig_6c(show_plot=False):
     return combine_stat_df
 
 def plot_fig_6d(show_plot=False):
-    data_path = os.path.join(os.getcwd(), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
     df = fig6.utils.load_OASIS(data_path)
     X, Y, Z = fig6.utils.get_input_output_confounder_OASIS(df)
     n_components = 2
@@ -170,7 +170,7 @@ def plot_fig_6d(show_plot=False):
 
     models, scaler_Xs, scaler_Ys = fig6.utils.k_fold_train_OASIS(df, cv, out_dir, method, n_components, random_state,
                                                                 n_splits)
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
 
@@ -222,7 +222,7 @@ def plot_fig_6d(show_plot=False):
         plt.show()
 
 def plot_fig_6e(show_plot=False):
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
 
     df = fig1.utils.preprocess_df(data_path)
 
@@ -239,7 +239,7 @@ def plot_fig_6e(show_plot=False):
 
     models, scaler_Xs, scaler_Ys = fig6.utils.k_fold_train_ADNI(df, cv, out_dir, method, n_components, random_state, n_splits)
 
-    data_path = os.path.join(os.getcwd(), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
     df = fig6.utils.load_OASIS(data_path)
     X, Y, Z = fig6.utils.get_input_output_confounder_OASIS(df)
     predict_result_df = fig6.utils.test_OASIS(models, scaler_Xs, scaler_Ys, X, Y, Z,out_dir, components=[0],method=method)
@@ -287,7 +287,7 @@ def plot_fig_6e(show_plot=False):
 
 
 def plot_fig_6f(): # common/unique
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
 
     df = fig1.utils.preprocess_df(data_path)
 
@@ -307,7 +307,7 @@ def plot_fig_6f(): # common/unique
 
     ADNI_PQ_path, ADNI_P_path = fig6.utils.consistent_brainmap_k_fold_repeated_ADNI(df, cv, out_dir, method, n_components, random_state=random_state, n_splits=n_splits,  thresh_per=thresh_per, intersection_perc=intersection_perc)
 
-    data_path = os.path.join(os.getcwd(), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
     df = fig6.utils.load_OASIS(data_path)
     X, Y, Z = fig6.utils.get_input_output_confounder_OASIS(df)
     n_components = 2

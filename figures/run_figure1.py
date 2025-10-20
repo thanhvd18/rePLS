@@ -27,12 +27,13 @@ def plot_fig_1c()-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.DataFrame]:
     csv_dir = os.path.join(save_dir, "csv")
     os.makedirs(csv_dir, exist_ok=True)
 
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname( __file__),'..', fr'data/ALL_3.csv')
+    print(data_path)
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
     network_df = fig1.utils.mapping_to_7_network(X,
-        seven_network_path=os.path.join(os.getcwd(), "..",'data/7network.csv'))
+        seven_network_path=os.path.join(os.path.dirname(__file__), "..",'data/7network.csv'))
     X.reset_index(drop=True, inplace=True)
     Z.reset_index(drop=True, inplace=True)
     Y.reset_index(drop=True, inplace=True)
@@ -78,17 +79,17 @@ def plot_fig_1c()-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.DataFrame]:
 
     return ((sorted_means, sorted_categories), male_cortical_thickness, female_cortical_thickness, t_stat)
 
-def plot_fig_1d()-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.DataFrame]:
+def plot_fig_1d(show_plot=False)-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.DataFrame]:
     save_dir = "figure1/1d"
     csv_dir = os.path.join(save_dir, "csv")
     os.makedirs(csv_dir, exist_ok=True)
 
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
     network_df = fig1.utils.mapping_to_7_network(X,
-        seven_network_path=os.path.join(os.getcwd(), "..",'data/7network.csv'))
+        seven_network_path=os.path.join(os.path.dirname(__file__), "..",'data/7network.csv'))
     Z.reset_index(drop=True, inplace=True)
     Y.reset_index(drop=True, inplace=True)
     X.reset_index(drop=True, inplace=True)
@@ -98,11 +99,11 @@ def plot_fig_1d()-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.DataFrame]:
     (1 if (x > 60 and x <= 70)
      else (2 if (x > 70 and x <= 80)
            else 3)))
-
+    
     fig, ax = plot_fig_1d_2(network_df, svg=True)
-
     fig, ax = plot_fig_1d_2(network_df, svg=False)
-
+    if show_plot:
+        plt.show()
     
     age_group1 = X[network_df["AGE_group"] == 0]
     age_group2 = X[network_df["AGE_group"] == 1]
@@ -124,12 +125,12 @@ def plot_fig_1d()-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.DataFrame]:
 
 
 def plot_fig_1e(show_plot=False)-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.DataFrame]:
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
     network_df = fig1.utils.mapping_to_7_network(X,
-                                                 seven_network_path=os.path.join(os.getcwd(), "..",
+                                                 seven_network_path=os.path.join(os.path.dirname(__file__), "..",
                                                                'data/7network.csv'))
     X_scaler = StandardScaler()
     X = pd.DataFrame(X_scaler.fit_transform(X), columns=X.columns)
@@ -186,7 +187,7 @@ def plot_fig_1e(show_plot=False)-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.Da
         plt.show()
 
 def plot_fig_1f(show_plot=False)-> Tuple[pd.DataFrame, pd.DataFrame]:
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
@@ -302,11 +303,11 @@ def plot_bar_chart_1c(df, svg=False):
     return fig, ax
 
 def figure_1a_barplot():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df_ = fig1.utils.preprocess_df(data_path)
     X, Y, Z = fig1.utils.get_input_output_confounder(df_)
 
-    parcellation_df = pd.read_csv(os.path.join(os.getcwd(), "..", 'data/7network.csv'))
+    parcellation_df = pd.read_csv(os.path.join(os.path.dirname(__file__), "..", 'data/7network.csv'))
     network = 7
     Z.reset_index(drop=True, inplace=True)
     Y.reset_index(drop=True, inplace=True)

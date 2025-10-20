@@ -17,7 +17,7 @@ from cross_validator import CrossValidator
 
 def plot_fig_3a(out_dir='./figure3/3a',random_state=1):
     out_dir = f"{out_dir}_{random_state}"
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
@@ -60,7 +60,7 @@ def plot_fig_3a(out_dir='./figure3/3a',random_state=1):
     return combine_stat_df
 
 def plot_fig_3b(out_dir='./figure3/3b',random_state=1):
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
@@ -104,7 +104,7 @@ def plot_fig_3b(out_dir='./figure3/3b',random_state=1):
     return
 
 def plot_fig_3b_supplementary():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)

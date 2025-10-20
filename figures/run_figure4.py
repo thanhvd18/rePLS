@@ -52,7 +52,7 @@ def plot_fig_4d(show_plot=False):
 
 def plot_fig_4a(cache=True, show_plot=False):
     print("Running")
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     n_components = 5
@@ -88,7 +88,7 @@ def plot_fig_4a(cache=True, show_plot=False):
     return mean_P,mean_alpha
 
 def plot_fig_4_PQ():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     n_components = 5
@@ -106,7 +106,7 @@ def plot_fig_4_PQ():
     return mean_P,mean_alpha
 
 def plot_fig_4e():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
@@ -129,7 +129,7 @@ def plot_fig_4e():
     return result_df
 
 def plot_fig_4f():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)
@@ -167,7 +167,7 @@ def plot_fig_4f():
     return result_df
 
 def plot_fig_4a_supplementary():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
     df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
 
@@ -220,7 +220,7 @@ def figure_4b():
     network_name7 = ["Vis", "SomMot", "DorsAttn", "SalVentAttn", "Limbic", "Cont", "Default"]
 
     # Create DataFrame with network labels
-    parcellation_df = pd.read_csv(os.path.join(os.getcwd(), "..",'data/7network_sort_by_index.csv'))
+    parcellation_df = pd.read_csv(os.path.join(os.path.dirname(__file__), "..",'data/7network_sort_by_index.csv'))
     df = pd.DataFrame(data=np.c_[P, parcellation_df.network.values],
                       columns=[f"P{i + 1}" for i in range(P.shape[1])] + ['network'])
     # Group data by network and sum absolute values

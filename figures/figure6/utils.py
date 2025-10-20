@@ -8,7 +8,7 @@ import os
 import sys
 
 
-sys.path.append((os.path.join(os.getcwd(), 'figure1')))
+sys.path.append((os.path.join(os.path.dirname(__file__), '..', 'figure1')))
 import figure1 as fig1
 import figure3 as fig3
 from figure3.utils import cal_correlation_MSE_regression
@@ -30,7 +30,7 @@ from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline,make_pipeline
 
 from typing import Tuple, List, Dict, Any, Optional
-sys.path.append(os.path.join(os.getcwd(), '..', 'dev'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'dev'))
 
 from cross_validator import CrossValidator
 from icecream import ic
@@ -623,7 +623,7 @@ def predict_with_components_PLS(self, X, components=None):
         Predictions based on the specified list of components.
     """
     # Zero-centering residuals
-    X -= self._x_mean
+    Xc -= self._x_mean
 
     # Use only the specified number of components
     if components is not None:
@@ -643,9 +643,9 @@ def predict_with_components_PLS(self, X, components=None):
         coef_ = np.dot(x_rotations_[:, components], self.y_loadings_[:, components].T)
         coef_ = (coef_ * self._y_std).T / self._x_std
 
-        preds_residual = X @ coef_.T + self.intercept_
+        preds_residual = Xc @ coef_.T + self.intercept_
     else:
-        preds_residual = self.predict(X)
+        preds_residual = self.predict(Xc)
 
     return np.array(preds_residual)
 

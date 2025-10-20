@@ -77,44 +77,20 @@ class rePLS(BaseEstimator, RegressorMixin):
         """
         if Z is None:
             Z = self.Z
-        # Recalculate X residuals
-        self.reg_ZX.fit(Z, X)
         X_residuals = X - self.reg_ZX.predict(Z)
-
-        # Zero-centering residuals
         X_residuals -= np.mean(X_residuals, axis=0)
 
-        # Get scores from the residual model
-        T = self.residual_model.x_scores_
-        U = self.residual_model.y_scores_
-
-        # Use only the specified number of components
         if components is not None:
-            # if componentse > self.n_components:
-            #     raise ValueError(
-            #         f"n_components should not exceed the maximum number of components: {self.n_components}"
-            #     )
-                
-            x_rotations_ = np.dot(
-            self.residual_model.x_weights_[:,components],
-            pinv2(np.dot(self.residual_model.x_loadings_[:,components].T, self.residual_model.x_weights_[:,components]), check_finite=False),
-            )
-            # self.y_rotations_ = np.dot(
-            #     self.y_weights_[:,n_components],
-            #     pinv2(np.dot(self.y_loadings_[:,n_components].T, self.y_weights_[:,n_components]), check_finite=False),
-            # )
-            coef_ = np.dot(x_rotations_[:,components], self.residual_model.y_loadings_[:,components].T)
-            coef_ = (coef_ * self.residual_model._y_std).T / self.residual_model._x_std
-        
-
-            preds_residual = X_residuals @ coef_.T +  self.residual_model.intercept_
+            x_weights = self.residual_model.x_weights_[:, components]
+            x_loadings = self.residual_model.x_loadings_[:, components]
+            y_loadings = self.residual_model.y_loadings_[:, components]
+            x_rot = x_weights @ np.linalg.pinv(x_loadings.T @ x_weights)
+            coef_ = (x_rot @ y_loadings.T).T
+            coef_ = (coef_ * self.residual_model._y_std) / self.residual_model._x_std
+            preds_residual = X_residuals @ coef_.T + self.residual_model.intercept_
         else:
             preds_residual = self.residual_model.predict(X_residuals)
-
-        # Add back the confounder effects and mean residuals
-        preds = preds_residual + self._mean_y_residuals + self.reg_Zy.predict(Z)
-
-        return np.array(preds)
+        return preds_residual + self._mean_y_residuals + self.reg_Zy.predict(Z)
 
 class rePCR(BaseEstimator, RegressorMixin):
 

@@ -18,8 +18,8 @@ from sklearn.utils import resample
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
-sys.path.append(os.path.join(os.getcwd(), '..', 'dev'))
-sys.path.append((os.path.join(os.getcwd(), 'figure1')))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'dev'))
+sys.path.append((os.path.join(os.path.dirname(__file__), '..', 'figure1')))
 import figure1 as fig1
 import figure3 as fig3
 from figure3.utils import cal_correlation_MSE_regression

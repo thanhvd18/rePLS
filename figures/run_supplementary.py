@@ -3,7 +3,7 @@ import os
 import sys
 
 
-sys.path.append(os.path.join(os.getcwd(), "..","dev"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..","dev"))
 
 from cross_validator import CrossValidator
 
@@ -26,7 +26,7 @@ from scipy import io
 
 
 def compare_rePLS_vs_PLS():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     n_components = 5

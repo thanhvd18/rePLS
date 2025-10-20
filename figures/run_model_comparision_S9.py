@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import os
 import sys
-sys.path.append(os.path.join(os.getcwd(), '..', 'dev'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'dev'))
 
 from cross_validator import CrossValidator
 
@@ -13,7 +13,7 @@ import figure1 as fig1
 import seaborn as sns
 
 def plot_fig_S9():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
     X, Y, Z = fig1.utils.get_input_output_confounder(df)

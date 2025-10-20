@@ -148,7 +148,7 @@ def plot_fig_5c(show_plot=False):
             plt.show()
 
 def prepare_data_fig_5bc():
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
     n_components = 3
     n_splits = 10
@@ -186,7 +186,7 @@ def prepare_data_fig_5bc():
     return df_result_shift_repeated, df_result_shift_label_repeated
 
 def plot_fig_5de(show_plot=False):
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
     n_components = 3
     n_splits = 10
