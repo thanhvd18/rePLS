@@ -11,8 +11,8 @@ import seaborn as sns
 import scipy
 from icecream import ic
 
-import figures.figure4 as fig4
-import figures.figure1 as fig1
+from . import figure4 as fig4
+from . import figure1 as fig1
 from cross_validator import CrossValidator
 
 

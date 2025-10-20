@@ -11,8 +11,8 @@ import numpy as np
 import pandas as pd
 from typing import Tuple
 import figure6 as fig6
-import figure3 as fig3
-import figure1 as fig1
+from . import figure3 as fig3
+from . import figure1 as fig1
 import figure4 as fig4
 import simulation
 from sklearn.decomposition import PCA

@@ -16,7 +16,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'dev'))
 
 from cross_validator import CrossValidator
 from typing import Tuple, List, Dict, Any, Optional
-
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 from rePLS import rePLS, rePCR, reMLR
 import figures.figure1 as fig1
 

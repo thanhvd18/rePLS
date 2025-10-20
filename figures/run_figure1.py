@@ -17,7 +17,7 @@ from seaborn import color_palette
 import seaborn as sns
 
 import config
-import figures.figure1 as fig1
+from . import figure1 as fig1
 
 def plot_fig_1c()-> Tuple[plt.Axes, plt.Axes, pd.DataFrame, pd.DataFrame]:
     """

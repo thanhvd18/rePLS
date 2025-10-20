@@ -10,12 +10,12 @@ import matplotlib.pyplot as plt
 
 
 import config
-import figures.figure3 as fig3
-import figures.figure1 as fig1
+from . import figure3 as fig3
+from . import figure1 as fig1
 from cross_validator import CrossValidator
 
 
-def plot_fig_3a(out_dir='./figure3/3a',random_state=1):
+def plot_fig_3a(out_dir='./figure3/3a',random_state=1, show_plot=False):
     out_dir = f"{out_dir}_{random_state}"
     data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
@@ -56,10 +56,13 @@ def plot_fig_3a(out_dir='./figure3/3a',random_state=1):
             f'{config.outcomes[i]}, r={combine_stat_df.loc[i, "r"]:.4f}, P={combine_stat_df.loc[i, "p_value"]:.0E}')
         #save figure to svg
         plt.savefig(f'{out_dir}/{config.outcomes[i]}.svg')
-        plt.show()
+        if show_plot:
+            plt.show()
+        else:
+            plt.close()
     return combine_stat_df
 
-def plot_fig_3b(out_dir='./figure3/3b',random_state=1):
+def plot_fig_3b(out_dir='./figure3/3b',random_state=1, show_plot=False):
     data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
 
@@ -100,7 +103,10 @@ def plot_fig_3b(out_dir='./figure3/3b',random_state=1):
     #save to svg
     os.makedirs("figure3/3b", exist_ok=True)
     plt.savefig('figure3/3b/figure3b.svg')
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.close()
     return
 
 def plot_fig_3b_supplementary():

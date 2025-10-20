@@ -9,8 +9,8 @@ import sys
 
 
 sys.path.append((os.path.join(os.path.dirname(__file__), '..', 'figure1')))
-import figure1 as fig1
-import figure3 as fig3
+from .. import figure1 as fig1
+from .. import figure3 as fig3
 from figure3.utils import cal_correlation_MSE_regression
 
 import numpy as np

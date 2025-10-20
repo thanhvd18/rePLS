@@ -1,8 +1,10 @@
 import os
 import sys
 
-
-
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'dev')) 
+sys.path.append((os.path.join(os.path.dirname(__file__), '..', 'figure1')))
+sys.path.append((os.path.join(os.path.dirname(__file__), '..', 'figure3')))
 import numpy as np
 import pandas as pd
 from rePLS import rePLS, rePCR, reMLR
@@ -18,15 +20,12 @@ from sklearn.utils import resample
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'dev'))
-sys.path.append((os.path.join(os.path.dirname(__file__), '..', 'figure1')))
-import figure1 as fig1
 import figure3 as fig3
-from figure3.utils import cal_correlation_MSE_regression
+from ..figure1.utils import categorize_disease_group, get_input_output_confounder
 
 def stratified_train_test_df_split(df, test_size,random_state):
-    df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
-    X, Y, Z = fig1.utils.get_input_output_confounder(df)
+    df, selected_subjects, labels = categorize_disease_group(df)
+    X, Y, Z = get_input_output_confounder(df)
     outcomes = Y.columns.values
     confounders = Z.columns.values
     n_outcomes = Y.shape[1]
@@ -39,8 +38,8 @@ def stratified_train_test_df_split(df, test_size,random_state):
 
 
 def k_fold_prediction_PQ(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_components: int,random_state: int,n_splits: int,method) -> Tuple[np.ndarray, np.ndarray]:
-    df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
-    X, Y, Z = fig1.utils.get_input_output_confounder(df)
+    df, selected_subjects, labels = categorize_disease_group(df)
+    X, Y, Z = get_input_output_confounder(df)
     selected_subjects = df['SubjectID'].unique()
     outcomes = Y.columns.values
     confounders = Z.columns.values
@@ -108,8 +107,8 @@ def k_fold_prediction_PQ(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_comp
 
 
 def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_components: int,random_state: int,n_splits: int) -> Tuple[np.ndarray, np.ndarray]:
-    df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
-    X, Y, Z = fig1.utils.get_input_output_confounder(df)
+    df, selected_subjects, labels = categorize_disease_group(df)
+    X, Y, Z = get_input_output_confounder(df)
     selected_subjects = df['SubjectID'].unique()
     outcomes = Y.columns.values
     confounders = Z.columns.values
@@ -170,8 +169,8 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_compone
 
 
 def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_components: int,random_state: int,n_splits: int)-> pd.DataFrame:
-    df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
-    X, Y, Z = fig1.utils.get_input_output_confounder(df)
+    df, selected_subjects, labels = categorize_disease_group(df)
+    X, Y, Z = get_input_output_confounder(df)
     selected_subjects = df['SubjectID'].unique()
     outcomes = Y.columns.values
     confounders = Z.columns.values
@@ -260,7 +259,7 @@ def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: s
                     print("Method not supported")
                     raise ValueError("Method not supported")
 
-                r, MSE, p_value = cal_correlation_MSE_regression(Y_test, y_pred)
+                r, MSE, p_value = fig3.utils.cal_correlation_MSE_regression(Y_test, y_pred)
                 r_in_kfold[method].append(r)
                 MSE_in_kfold[method].append(MSE)
                 pvalue_in_kfold[method].append(p_value)
@@ -282,8 +281,8 @@ def sample_size_change_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: s
 
 
 def number_of_outcomes_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_components: int,random_state: int,n_splits: int)-> pd.DataFrame:
-    df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
-    X, Y, Z = fig1.utils.get_input_output_confounder(df)
+    df, selected_subjects, labels = categorize_disease_group(df)
+    X, Y, Z = get_input_output_confounder(df)
     selected_subjects = df['SubjectID'].unique()
     outcomes = Y.columns.values
     confounders = Z.columns.values
@@ -353,7 +352,7 @@ def number_of_outcomes_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: s
 
 
 
-            r, MSE, p_value = cal_correlation_MSE_regression(Y_test, y_pred)
+            r, MSE, p_value = fig3.utils.cal_correlation_MSE_regression(Y_test, y_pred)
             r_in_kfold.append(r)
             MSE_in_kfold.append(MSE)
             pvalue_in_kfold.append(p_value)

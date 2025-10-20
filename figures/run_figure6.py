@@ -11,9 +11,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-import figures.figure6 as fig6
-import figures.figure3 as fig3
-import figures.figure1 as fig1
+from . import figure6 as fig6
+from . import figure3 as fig3
+from . import figure1 as fig1
 
 from cross_validator import CrossValidator
 

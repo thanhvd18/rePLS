@@ -8,8 +8,8 @@ from cross_validator import CrossValidator
 import numpy as np
 import pandas as pd
 from typing import Tuple
-import figure3 as fig3
-import figure1 as fig1
+from . import figure3 as fig3
+from . import figure1 as fig1
 import seaborn as sns
 
 def plot_fig_S9():

@@ -4,8 +4,8 @@ import sys
 from sklearn.cluster import mean_shift
 
 sys.path.append((os.path.join(os.path.dirname(__file__), '..', 'figure1')))
-import figure1 as fig1
-import figure3 as fig3
+from ..figure1.utils import categorize_disease_group, get_input_output_confounder
+from .. import figure3 as fig3
 from figure3.utils import cal_correlation_MSE_regression
 
 import numpy as np
@@ -33,8 +33,8 @@ from sklearn.utils import resample
 from tqdm import tqdm
 
 def k_fold_disease_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_components: int,random_state: int,n_splits: int) -> Tuple[np.ndarray, np.ndarray]:
-    df, selected_subjects, labels = fig1.utils.categorize_disease_group(df)
-    _, _, Z = fig1.utils.get_input_output_confounder(df)
+    df, selected_subjects, labels = categorize_disease_group(df)
+    _, _, Z = get_input_output_confounder(df)
     selected_subjects = df['SubjectID'].unique()
     confounders = Z.columns.values
 
