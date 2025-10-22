@@ -1,5 +1,6 @@
 import os
 import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'dev')) 
@@ -21,7 +22,10 @@ from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
 import figure3 as fig3
-from ..figure1.utils import categorize_disease_group, get_input_output_confounder
+try:    
+    from ..figure1.utils import categorize_disease_group, get_input_output_confounder
+except ImportError:
+    from figures.figure1.utils import categorize_disease_group, get_input_output_confounder
 
 def stratified_train_test_df_split(df, test_size,random_state):
     df, selected_subjects, labels = categorize_disease_group(df)
@@ -141,7 +145,6 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,n_compone
 
         X_train, X_test = X_train[:, :], X_test[:, :]
 
-        # normalize X, Y scaler
         X_scaler = StandardScaler()
         X_train = X_scaler.fit_transform(X_train)
         X_test = X_scaler.transform(X_test)
