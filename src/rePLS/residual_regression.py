@@ -59,6 +59,29 @@ class rePLS(BaseEstimator, RegressorMixin):
         preds = self.residual_model.predict(X_residuals) + self._mean_y_residuals + self.reg_Zy.predict(Z)
 
         return np.array(preds)
+    def transform(self, X, Z=None):
+        """
+        Project input features onto the latent components of the residual model.
+
+        Parameters:
+        - X: array-like, shape (n_samples, n_features)
+            Input features to transform.
+        - Z: array-like, shape (n_samples, n_confounders), optional
+            Confounding variables. If None, the original Z provided during initialization is used.
+
+        Returns:
+        - T: array-like, shape (n_samples, n_components)
+            Scores of X on the latent components learned from residuals.
+        """
+        if Z is None: # for training
+            Z = self.Z
+        # Residualize X with respect to confounders and center using training residual means
+        X_residuals = X - self.reg_ZX.predict(Z)
+        X_residuals -= self._mean_X_residuals
+
+        # Use the fitted residual PLS model to obtain component scores
+        T = self.residual_model.transform(X_residuals)
+        return T
     def predict_with_components(self, X,components=None, Z=None):
         """
         Predict using a specified number of components from the residual model.
@@ -133,6 +156,26 @@ class rePCR(BaseEstimator, RegressorMixin):
         preds = self.residual_model.predict(X_residuals) + self.reg_Zy.predict(Z) +self._mean_y_residuals
         
         return np.array(preds) 
+    def transform(self, X, Z=None):
+        """
+        Project input features onto the PCA latent components of the residual model.
+
+        Parameters:
+        - X: array-like, shape (n_samples, n_features)
+            Input features to transform.
+        - Z: array-like, shape (n_samples, n_confounders), optional
+            Confounding variables. If None, the original Z provided during initialization is used.
+
+        Returns:
+        - T: array-like, shape (n_samples, n_components)
+            PCA scores of residualized X.
+        """
+        if Z is None:
+            Z = self.Z
+        X_residuals = X - self.reg_ZX.predict(Z)
+        X_residuals -= self._mean_X_residuals
+        pca = self.residual_model.named_steps['pca']
+        return pca.transform(X_residuals)
 class reMLR(BaseEstimator, RegressorMixin):
 
     def __init__(self,Z):
@@ -155,9 +198,10 @@ class reMLR(BaseEstimator, RegressorMixin):
         #Calculate residuals        
         y_residuals = y - self.reg_Zy.predict(self.Z)
         X_residuals = X - self.reg_ZX.predict(self.Z)
-        
+        # store training residual mean for consistent centering at transform/predict time
+        self._mean_X_residuals = np.mean(X_residuals, axis=0)
         y_residuals -= np.mean(y_residuals, axis=0)
-        X_residuals -= np.mean(X_residuals, axis=0)
+        X_residuals -= self._mean_X_residuals
         
         #Regession model for residual         
         self.residual_model.fit(X_residuals, y_residuals)
@@ -171,4 +215,23 @@ class reMLR(BaseEstimator, RegressorMixin):
         X_residuals = X - self.reg_ZX.predict(Z)
         preds = self.residual_model.predict(X_residuals) + self.reg_Zy.predict(Z)
         return np.array(preds) 
+    def transform(self, X, Z=None):
+        """
+        Return centered residualized features used by the linear residual model.
+
+        Parameters:
+        - X: array-like, shape (n_samples, n_features)
+            Input features to transform.
+        - Z: array-like, shape (n_samples, n_confounders), optional
+            Confounding variables. If None, the original Z provided during initialization is used.
+
+        Returns:
+        - X_residuals_centered: array-like, shape (n_samples, n_features)
+            Residualized and centered features.
+        """
+        if Z is None:
+            Z = self.Z
+        X_residuals = X - self.reg_ZX.predict(Z)
+        X_residuals -= self._mean_X_residuals
+        return X_residuals
     
