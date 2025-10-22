@@ -2,6 +2,7 @@ import os
 import sys
 import json
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from typing import Tuple
 import numpy as np
@@ -11,8 +12,9 @@ import seaborn as sns
 import scipy
 from icecream import ic
 
-from . import figure4 as fig4
-from . import figure1 as fig1
+
+from figures import figure4 as fig4
+from figures import figure1 as fig1
 from cross_validator import CrossValidator
 
 
@@ -50,7 +52,7 @@ def plot_fig_4d(show_plot=False):
     if show_plot:
         plt.show()
 
-def plot_fig_4a(cache=True, show_plot=False):
+def plot_fig_4a(random_state=1, cache=True, show_plot=False):
     print("Running")
     data_path = os.path.join(os.path.dirname(__file__), "..", 'data/ALL_3.csv')
     df = fig1.utils.preprocess_df(data_path)
@@ -176,19 +178,13 @@ def plot_fig_4a_supplementary():
     random_state = 1
     out_dir = './figure4/results/supplementary'
 
-    # test_size = 0.9
-    # for test_size in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]:
     for test_size in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]:
 
         if test_size == 0:
-        # sample_train_df, sample_test_df, N_subject_train = fig4.utils.stratified_train_test_df_split(df, test_size,random_state)
-        # print(f"N_subject_train = {N_subject_train}, perform LOOCV")
-        # print(f"training size = { len(df['SubjectID'].unique())}")
             n_splits = len(df['SubjectID'].unique())
             cv = CrossValidator(n_splits=n_splits, n_repeats=n_repeats,
                                 stratified=False, random_state=random_state)
             mean_P, mean_alpha = fig4.utils.k_fold_prediction(df, cv, out_dir,n_components,random_state,n_splits=n_splits)
-            #save mean_P to mat
             os.makedirs(out_dir, exist_ok=True)
             path = os.path.join(
                 out_dir, f"mean_P_test_size{test_size}.mat"
@@ -202,19 +198,16 @@ def plot_fig_4a_supplementary():
                                 stratified=False, random_state=random_state)
             mean_P, mean_alpha = fig4.utils.k_fold_prediction(sample_train_df, cv, out_dir, n_components, random_state,
                                                               n_splits=n_splits)
-            # save mean_P to mat
         os.makedirs(out_dir, exist_ok=True)
         path = os.path.join(
             out_dir, f"mean_P_test_size{test_size}.mat"
         )
 
         scipy.io.savemat(path, {'P': mean_P, 'alpha': mean_alpha})
-    # return mean_P,mean_alpha
 
 def figure_4b():
-    # Load data from CSV
     P = pd.read_csv('figure4/4b/mean_P_filter.csv').values
-    P = P[2:, :]
+    P = P[2:, :] # remove first 2 backgroud features in left and right hemispheres
 
     # Load parcellation data
     network_name7 = ["Vis", "SomMot", "DorsAttn", "SalVentAttn", "Limbic", "Cont", "Default"]
@@ -356,11 +349,11 @@ def figure_4b():
     return option
 
 if __name__ == '__main__':
-    # plot_fig_4a(cache=False)
+    plot_fig_4a(cache=False)
     # result = figure_4b()
     # result_df = plot_fig_4e()
     # result_df = plot_fig_4f()
     # print(result_df)
-    plot_fig_4d()
+    # plot_fig_4d()
     # plot_fig_4a_supplementary()
 
