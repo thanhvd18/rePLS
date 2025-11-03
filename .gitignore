@@ -24,3 +24,9 @@ data/oasis_cross-sectional_thickness_combined.csv
 /figures/matlab/f1
 .idea
 .venv
+*.ps1
+*.csv
+readme.md
+readme.md
+/.vscode
+*.png

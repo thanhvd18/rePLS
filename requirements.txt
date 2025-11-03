@@ -7,6 +7,7 @@ icecream
 numpy
 scipy
 scikit-learn
+umap-learn
 cairosvg
 nibabel
 mayavi

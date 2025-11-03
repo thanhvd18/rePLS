@@ -11,6 +11,14 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline,make_pipeline
+from sklearn.manifold import TSNE
+from sklearn.neighbors import NearestNeighbors
+
+try:
+    import umap
+    HAS_UMAP = True
+except ImportError:
+    HAS_UMAP = False
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'dev'))
 
@@ -86,6 +94,32 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,method: s
             model.fit(X_train, Y_train)
             # Predict on test set
             y_pred = model.predict(X_test)
+        elif method == "UMAP":
+            if not HAS_UMAP:
+                raise ImportError("UMAP method selected but the umap-learn package is not installed.")
+
+            reducer = umap.UMAP(n_components=n_components, random_state=random_state)
+            X_train_embedded = reducer.fit_transform(X_train)
+            X_test_embedded = reducer.transform(X_test)
+
+            model = LinearRegression()
+            model.fit(X_train_embedded, Y_train)
+            y_pred = model.predict(X_test_embedded)
+        elif method == "TSNE":
+            # Fit TSNE on training data
+            tsne = TSNE(n_components=n_components, random_state=random_state, init='random', learning_rate='auto')
+            X_train_embedded = tsne.fit_transform(X_train)
+
+            # Map test data to TSNE space by finding nearest neighbors in the original space
+            nn = NearestNeighbors(n_neighbors=min(5, len(X_train)))
+            nn.fit(X_train)
+            distances, indices = nn.kneighbors(X_test)
+            X_train_embedded = np.array(X_train_embedded)
+            X_test_embedded = X_train_embedded[indices].mean(axis=1)
+
+            model = LinearRegression()
+            model.fit(X_train_embedded, Y_train)
+            y_pred = model.predict(X_test_embedded)
         elif method == "rePCR":
             model = rePCR(n_components=n_components, Z=Z_train)
             model.fit(X_train, Y_train)
@@ -132,42 +166,33 @@ def k_fold_prediction(df: pd.DataFrame,cv: CrossValidator,out_dir: str,method: s
             predict_result_df = pd.concat(
                 [predict_result_df, fold_i_prediction_results_df])
 
-    # Initialize DataFrame to store statistics
     combine_stat_df = pd.DataFrame(columns=["outcome", "r", "MSE", "p_value"])
 
-    # Loop through outcomes
     for i in range(n_outcomes):
         outcome_i = predict_result_df[f"outcome{i}"]
         pred_outcome_i = predict_result_df[f"outcome{i}_pred"]
 
-        # Calculate r and MSE
         correlation, p_value = pearsonr(outcome_i, pred_outcome_i)
         mse = mean_squared_error(outcome_i, pred_outcome_i)
 
-        # Log results
         print(f"Outcome: {outcomes[i]}, Correlation: {correlation}, p_value: {p_value}, MSE: {mse}")
 
-        # Append to DataFrame
         combine_stat_df.loc[i] = {"outcome": outcomes[i], "r": correlation, "MSE": mse, "p_value": p_value}
 
-    # Define filenames
     stat_filename = f"stat_t{dataset}_n_splits{n_splits}_method_{method}_n_components{n_components}_random_state{random_state}.csv"
     predict_filename = f"predict_{dataset}_n_splits{n_splits}_method_{method}_n_components{n_components}_random_state{random_state}.csv"
     combine_stat_filename = f"combine_stat_{dataset}_n_splits{n_splits}_method_{method}_n_components{n_components}_random_state{random_state}.csv"
 
-    # Get absolute paths
     stat_path = os.path.abspath(os.path.join(out_dir, stat_filename))
     predict_path = os.path.abspath(os.path.join(out_dir, predict_filename))
     combine_stat_path = os.path.abspath(os.path.join(out_dir, combine_stat_filename))
 
-    # Save results to CSV
     os.makedirs(out_dir, exist_ok=True)
     stat_df.to_csv(stat_path, index=False)
     predict_result_df.sort_values(by="DX_encode", inplace=True)
     predict_result_df.to_csv(predict_path, index=False)
     combine_stat_df.to_csv(combine_stat_path, index=False)
 
-    # Print absolute paths
     print(f"Stat file saved to: {stat_path}")
     print(f"Predict file saved to: {predict_path}")
     print(f"Combine stat file saved to: {combine_stat_path}")
