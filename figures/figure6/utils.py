@@ -64,7 +64,11 @@ def load_OASIS(data_path: str) -> pd.DataFrame:
 
 def get_input_output_confounder_OASIS(df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     label_encoder = LabelEncoder()
-    X = df["thickness"].apply(lambda x: np.array(eval(x)))
+    # Support multiple column names for cortical thickness vector.
+    # - legacy: "thickness"
+    # - current processed file in this repo: "schafer200_7network"
+    thickness_col = "thickness" if "thickness" in df.columns else "schafer200_7network"
+    X = df[thickness_col].apply(lambda x: np.array(eval(x)))
     X = np.vstack(X)
 
     # scaler normalization

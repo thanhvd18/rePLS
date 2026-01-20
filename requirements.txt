@@ -10,4 +10,5 @@ scikit-learn
 cairosvg
 nibabel
 mayavi
+pyyaml
 #PySurfer

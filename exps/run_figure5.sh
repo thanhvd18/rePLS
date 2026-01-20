@@ -1,7 +1,16 @@
 #!/bin/bash
 
-source setup_env.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/setup_env.sh"
 cd "$base_dir/figures"
+
+run_matlab_batch() {
+  local cmd="$1"
+  if [ -n "${matlab:-}" ] && { command -v "$matlab" >/dev/null 2>&1 || [ -x "$matlab" ]; }; then
+    "$matlab" -batch "$cmd"
+  else
+    echo "Matlab not found (matlab='$matlab'); skipping: $cmd"
+  fi
+}
 
 # Run each figure plotting function
 echo "Running plot_fig_5bc..."
@@ -20,4 +29,4 @@ echo "Running plot_fig_5de..."
 python -c "from figures.run_figure5 import plot_fig_5de; plot_fig_5de()"
 echo "Finished plot_fig_5de"
 
-$matlab -batch "cd('$base_dir/figures/figure5/matlab'); fig5d;exit();"
+run_matlab_batch "cd('$base_dir/figures/figure5/matlab'); fig5d;exit();"

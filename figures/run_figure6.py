@@ -14,12 +14,13 @@ import matplotlib.pyplot as plt
 import figures.figure6 as fig6
 import figures.figure3 as fig3
 import figures.figure1 as fig1
+import config
 
 from cross_validator import CrossValidator
 
 
 def plot_fig_6b(show_plot=False):
-    data_path = os.path.join(os.getcwd(), "..", 'data/ALL_3.csv')
+    data_path = str(config.ALL_3_PATH)
 
     df = fig1.utils.preprocess_df(data_path)
 
@@ -92,7 +93,8 @@ def plot_fig_6b(show_plot=False):
     return
 
 def plot_fig_6c(show_plot=False):
-    data_path = os.path.join(os.getcwd(), "..", 'data/oasis_cross-sectional_thickness_combined.csv')
+    # Prefer configured path (matches `data/OASIS_FS_processed.csv` in this repo)
+    data_path = str(config.OASIS_PROCESSED_PATH)
     df = fig6.utils.load_OASIS(data_path)
     X, Y, Z = fig6.utils.get_input_output_confounder_OASIS(df)
     n_components = 5

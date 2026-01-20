@@ -1,0 +1,38 @@
+# Configuration file for rePLS project
+# You can override any path using environment variables:
+# - REPLS_DATA_DIR
+# - REPLS_ADNI_PATH
+# - REPLS_OASIS_PATH
+# - REPLS_ALL3_PATH
+
+# Project paths
+base_dir: "."  # Relative to this config file
+data_dir: "data"  # Can be absolute or relative path
+
+# Data file paths
+adni_processed_path: "data/ADNI_FS_processed.csv"
+oasis_processed_path: "data/OASIS_FS_processed.csv"
+all_3_path: "data/ADNI_FS_processed.csv"  # Used by figures 1/3/4/5/6
+
+# Network configuration
+seven_network_path: "data/7network.csv"
+
+# Domain configuration
+networks:
+  - "Vis"
+  - "SomMot"
+  - "DorsAttn"
+  - "SalVentAttn"
+  - "Limbic"
+  - "Cont"
+  - "Default"
+
+outcomes:
+  - "CDRSB"
+  - "ADAS11"
+  - "ADAS13"
+  - "ADASQ4"
+  - "MMSE"
+  - "RAVLT_immediate"
+  - "RAVLT_learning"
+  - "RAVLT_perc_forgetting"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source setup_env.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/setup_env.sh"
 cd "$base_dir/figures"
 
 for random_state in {1..10}; do
